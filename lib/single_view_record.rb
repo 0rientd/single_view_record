@@ -13,7 +13,7 @@ module SingleViewRecord
 
   def self.show_record(record)
     puts "\e[2J \e[1;2H#{'\\' * 10} Object Class: #{record.class} \e[2H"
-    puts record
+    puts record.pretty_inspect
 
     print_nav_options
   end
