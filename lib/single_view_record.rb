@@ -15,13 +15,18 @@ module SingleViewRecord
     puts "\e[2J\e[H"
     puts record
 
-    print_nav_buttons
+    print_nav_options
   end
 
-  def self.print_nav_buttons
-    terminal_size = IO.console.winsize
+  def self.print_nav_options
+    rows, cols = IO.console.winsize
+    nav_options = " [>] Next  | [<] Previous | [x] Exit "
 
-    puts "\e[#{terminal_size[0] - 1};1H Next Page [>] | Previous Page [<] | Exit [x]"
+    side_len = (cols - nav_options.length) / 2
+    left_side  = "\\" * side_len
+    right_side = "\\" * (cols - nav_options.length - side_len)
+
+    print "\e[#{rows - 1};1H#{left_side}#{nav_options}#{right_side}"
   end
 
   def self.entry(entry, index, records = nil)
@@ -29,21 +34,27 @@ module SingleViewRecord
 
     case entry
     when ">"
-      show_one_record(records[index + 1]) if records && records[index + 1]
-
-      entry(get_input, index + 1, records)
+      new_index = index + 1
     when "<"
-      show_one_record(records[index - 1]) if records && records[index - 1]
-
-      entry(get_input, index - 1, records)
+      new_index = index - 1
     when "x"
       return
     else
       puts "Invalid input. Please try again."
-      print_nav_buttons
+      print_nav_options
 
       entry(get_input, index, records)
     end
+
+    if new_index.between?(0, records.length - 1)
+      show_one_record(records[new_index])
+      entry(get_input, new_index, records)
+    else
+      puts "\a"
+      show_one_record(records[index])
+      entry(get_input, index, records)
+    end
+
   end
 
   def self.get_input
@@ -54,7 +65,7 @@ module SingleViewRecord
         break if char == "\u0003" # Ctrl+C para sair
         break char if [">", "<", "x"].include?(char)
 
-        print_nav_buttons
+        print_nav_options
       end
     end
   end
