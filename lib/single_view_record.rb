@@ -4,15 +4,15 @@ require_relative "single_view_record/version"
 
 module SingleViewRecord
   def self.show(records)
-    show_one_record(records.first)
+    show_record(records.first)
 
     entry(get_input, 0, records)
   end
 
   private
 
-  def self.show_one_record(record)
-    puts "\e[2J\e[H"
+  def self.show_record(record)
+    puts "\e[2J \e[1;2H#{'\\' * 10} Object Class: #{record.class} \e[2H"
     puts record
 
     print_nav_options
@@ -47,11 +47,11 @@ module SingleViewRecord
     end
 
     if new_index.between?(0, records.length - 1)
-      show_one_record(records[new_index])
+      show_record(records[new_index])
       entry(get_input, new_index, records)
     else
       puts "\a"
-      show_one_record(records[index])
+      show_record(records[index])
       entry(get_input, index, records)
     end
 
