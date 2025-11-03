@@ -15,7 +15,7 @@ end
 private
 
 def show_record(record)
-  puts "\e[2J \e[1;2H#{'\\' * 10} Object Class: " + "#{record.class}".red
+  puts "\e[2J \e[1;2H" + "#{'\\' * 10} ".green + "Object Class: " + "#{record.class}".red
   puts record.pretty_inspect
 
   print_nav_options
@@ -29,7 +29,7 @@ def print_nav_options
   left_side  = "\\" * side_len
   right_side = "\\" * (cols - nav_options.length - side_len)
 
-  print "\e[#{rows - 1};1H#{left_side}#{nav_options}#{right_side}"
+  print "\e[#{rows - 1};1H#{left_side.green}#{nav_options.blue}#{right_side.green}"
 end
 
 def entry(entry, index, records = nil)
